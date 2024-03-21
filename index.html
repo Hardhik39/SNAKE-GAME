@@ -1,0 +1,457 @@
+<html>
+    
+<canvas id="SNAKE GAME" width="1500" height="900"></canvas>
+    <script src=snake.js></script>
+	<script src="2nd%20snake.js"></script>
+	<script src=box.js></script>
+	<script src=food.js></script>
+	<script src=menu%20pages.js></script>
+
+<script>
+    
+    var g_canvas = document.getElementById("SNAKE GAME");
+    var g_context = g_canvas.getContext("2d");
+    var g_FrameRate = 30;
+    var g_TimeInterval = 1000 / g_FrameRate;
+	var Score_2=0;
+	
+		var HOME_SCREEN_ACTIVE=0;
+		var INFO_ACTIVE=0;
+		var GAME_OVER_ACTIVE=0;
+		var GAME_PLAY_ACTIVE=0;
+	    var PLAYER_ACTIVE=0;
+	    var SINGLE_PLAYER_FLAG=0;
+	    var MULTI_PLAYER_FLAG=0;
+		var RESTART=0;
+	var Start_S=0;
+	var Start_M=0;
+	var Start_H=0;
+	setInterval(GameLoop, g_TimeInterval);
+	
+	
+	var g_snake=new c_snake(300,100,20,50,5);
+	var g_snake_2=new c_snake_2(1000,100,20,50,5);
+	var home=new c_HOME_PAGE();
+	var gameover=new c_GAMEOVER_PAGE();
+	var info=new c_INFO_PAGE();
+	var players= new c_MULTIPLAYER_PAGE();
+	g_snake.m_Inital_snake();
+	g_snake_2.m_Inital_2snake();
+    
+	function GameLoop()  
+    {
+		f_Game_Restart();
+		f_home();
+		if(SINGLE_PLAYER_FLAG==1||MULTI_PLAYER_FLAG==1)
+			{
+		g_snake.m_snake_food_collision();
+		g_snake.m_move_snake();
+		g_snake.m_snake_wall_collision(g_canvas);
+			}
+		
+		if(MULTI_PLAYER_FLAG==1)
+			{
+		f_2snake_food_2_collision();
+		g_snake_2.m_move_2snake();
+		g_snake_2.m_2snake_wall_collision(g_canvas);
+			}
+
+		f_clearcanvas();
+		f_Draw();
+		if(SINGLE_PLAYER_FLAG==1||MULTI_PLAYER_FLAG==1)
+			{
+		g_snake.m_Draw_Snake(g_context);
+		g_snake.m_draw_score(g_context);
+		g_snake.m_draw_food(g_context);
+			}
+		if(MULTI_PLAYER_FLAG==1)
+			{
+		g_snake_2.m_Draw_2Snake(g_context);
+	    f_2Score_Draw();
+			}
+		
+	}
+	
+	function f_Game_Restart()
+	{
+		if(RESTART==1)
+			{
+				if(Start_S==1||Start_M==1)
+					{
+						var Xpos=300;
+						var temp_Xpos=300;
+						for(var i=0 ; i<g_snake.Snake_length ; i++)
+							{
+								g_snake.Snake_array[i].X=Xpos;
+								Xpos-=g_snake.Snake_size;
+								g_snake.Snake_array[i].Y=100;
+							}
+					
+					for(var j=0;j<=g_snake.Temp_Pos_Array_Len;j++)
+					  {
+
+						  g_snake.Temp_XPos_Array[j]=temp_Xpos--;
+						  g_snake.Temp_YPos_Array[j]=100;
+
+					  }
+						g_snake.game_stop=0;
+						
+						if(Start_S==1)
+							{
+						SINGLE_PLAYER_FLAG=1;
+							}
+						if(Start_M==1)
+							{
+								MULTI_PLAYER_FLAG=1;
+							}
+						g_snake.PLAYER1_GAMEENDING_FLAG=0;
+						console.log(SINGLE_PLAYER_FLAG+"___")
+							
+						RESTART=0;
+						g_snake.active_snake_length=5;
+						g_snake.snake_speed=10;
+						g_snake.score=0;
+					}
+				if(Start_M==1)
+					{
+						var Xpos_2=1000;
+						var temp_Xpos_2=1000;
+						for(i=0 ; i<g_snake_2.Snake_length_2 ; i++)
+							{
+								g_snake_2.Snake_array_2[i].X=Xpos_2;
+								Xpos_2-=g_snake_2.Snake_size_2;
+								g_snake_2.Snake_array_2[i].Y=100;
+							}
+					
+					for(j=0;j<=g_snake_2.Temp_Pos_Array_Len_2;j++)
+					  {
+
+						  g_snake_2.Temp_XPos_Array_2[j]=temp_Xpos_2--;
+						  g_snake_2.Temp_YPos_Array_2[j]=100;
+
+					  }
+						g_snake_2.game_stop_2=0;
+						MULTI_PLAYER_FLAG=1;
+						g_snake_2.PLAYER2_GAMEENDING_FLAG=0;
+						console.log(g_snake_2.active_Snake_length_2);
+						g_snake_2.active_Snake_length_2=5;
+						g_snake_2.snake_speed_2=10;
+						RESTART=0;
+						Score_2=0;
+						
+					}
+				
+			}
+	}
+	function f_home()
+	{
+		if(Start_H==1)
+			{
+				var Xpos=300;
+						var temp_Xpos=300;
+						for(var i=0 ; i<g_snake.Snake_length ; i++)
+							{
+								g_snake.Snake_array[i].X=Xpos;
+								Xpos-=g_snake.Snake_size;
+								g_snake.Snake_array[i].Y=100;
+							}
+					
+					for(var j=0;j<=g_snake.Temp_Pos_Array_Len;j++)
+					  {
+
+						  g_snake.Temp_XPos_Array[j]=temp_Xpos--;
+						  g_snake.Temp_YPos_Array[j]=100;
+
+					  }
+						g_snake.game_stop=0;
+
+					
+						g_snake.active_snake_length=5;
+						g_snake.snake_speed=10;
+						g_snake.score=0;
+				
+				var Xpos_2=1000;
+						var temp_Xpos_2=1000;
+						for(i=0 ; i<g_snake_2.Snake_length_2 ; i++)
+							{
+								g_snake_2.Snake_array_2[i].X=Xpos_2;
+								Xpos_2-=g_snake_2.Snake_size_2;
+								g_snake_2.Snake_array_2[i].Y=100;
+							}
+					
+					for(j=0;j<=g_snake_2.Temp_Pos_Array_Len_2;j++)
+					  {
+
+						  g_snake_2.Temp_XPos_Array_2[j]=temp_Xpos_2--;
+						  g_snake_2.Temp_YPos_Array_2[j]=100;
+
+					  }
+						g_snake_2.game_stop_2=0;
+						
+						console.log(g_snake_2.active_Snake_length_2);
+						g_snake_2.active_Snake_length_2=5;
+						g_snake_2.snake_speed_2=10;
+				Start_H=0;
+						Score_2=0;
+				
+			}
+	}
+	
+	
+	function f_2Score_Draw() //how many point you scored
+        {
+            g_context.font="35px Arial";
+			g_context.fillStyle="#0a0909";
+            g_context.fillText(" PLAYER 2 : "+Score_2,1200,50);
+            
+        }
+	
+	function f_2snake_food_2_collision()
+	{
+		if (g_snake_2.Snake_array_2[0].X + g_snake_2.Snake_size_2 >= g_snake.snake_food.food_X &&
+            g_snake_2.Snake_array_2[0].X <= g_snake.snake_food.food_X + g_snake.snake_food.size &&
+            g_snake_2.Snake_array_2[0].Y + g_snake_2.Snake_size_2 >= g_snake.snake_food.food_Y &&
+             g_snake_2.Snake_array_2[0].Y <= g_snake.snake_food.food_Y + g_snake.snake_food.size)
+			{
+				Score_2++;
+				g_snake.snake_food.food_X=Math.floor(Math.random() * 1450-g_snake.snake_food.size) + g_snake.snake_food.size;
+				
+                 g_snake.snake_food.food_Y=Math.floor(Math.random() * 850-g_snake.snake_food.size) + g_snake.snake_food.size;
+				g_snake_2.snake_character_2=Math.floor(Math.random() * (3-1)) + 1;
+				 if(g_snake_2.snake_character_2==1)
+                        {
+                            g_snake_2.snake_speed_2=parseInt((Math.random()*(40-5))+5);
+                        }
+                    if(g_snake_2.snake_character_2==2)
+                        {
+                            g_snake_2.active_Snake_length_2=parseInt((Math.random()*(50-3))+3);
+                        }
+                    if(g_snake_2.snake_character_2==3)
+                        {
+                            g_snake_2.snake_size_2=parseInt((Math.random()*(90-50))+50);
+                        }
+			}
+	}
+	 function f_Draw()
+        {
+			if(HOME_SCREEN_ACTIVE==0)
+				{
+				  home.m_draw_HOME_PAGE(g_context);
+				}
+			if(GAME_OVER_ACTIVE==1)
+				{
+					gameover.m_draw_GAMEOVER_PAGE(g_context);
+				}
+			if(INFO_ACTIVE==1)
+				{
+					info.m_draw_INFO_PAGE(g_context);
+				}
+			if(PLAYER_ACTIVE==1)
+				{
+					players.m_draw_MULTIPLAYER_PAGE(g_context);
+				}
+			
+			
+			if(SINGLE_PLAYER_FLAG==1)
+				{
+					if(g_snake.PLAYER1_GAMEENDING_FLAG==1)
+						{
+							GAME_OVER_ACTIVE=1;
+							SINGLE_PLAYER_FLAG=0;
+							
+						}
+				}
+			if(MULTI_PLAYER_FLAG==1)
+				{
+					if(g_snake.PLAYER1_GAMEENDING_FLAG==1&& g_snake.score<Score_2)
+						{
+							GAME_OVER_ACTIVE=1;
+							MULTI_PLAYER_FLAG=0;
+						}
+					if(g_snake_2.PLAYER2_GAMEENDING_FLAG==1&& g_snake.score>Score_2)
+						{
+							GAME_OVER_ACTIVE=1;
+							MULTI_PLAYER_FLAG=0;
+						}
+					if(g_snake.PLAYER1_GAMEENDING_FLAG==1 && g_snake_2.PLAYER2_GAMEENDING_FLAG==1&&g_snake.score==Score_2)
+						{
+							GAME_OVER_ACTIVE=1;
+							MULTI_PLAYER_FLAG=0;
+						}
+				}
+		
+        }
+    
+	
+	
+	
+	function f_clearcanvas()
+        {
+			g_context.fillStyle="#74d4f7";
+            g_context.clearRect(0,0,g_canvas.width,g_canvas.height);
+            g_context.fillRect(0,0,g_canvas.width,g_canvas.height);
+        }
+	 
+	function f_OnKeyDown(l_event)
+    {
+        
+        if(l_event.keyCode == 37)
+           { 
+                g_snake.MoveLeft_flag  = 1;
+           }
+        if(l_event.keyCode == 39)
+           {
+                g_snake.MoveRight_flag = 1;
+           }
+        
+        if(l_event.keyCode == 38)
+           {
+                g_snake.MoveUp_flag = 1;          
+		   }
+		if(l_event.keyCode == 40)
+           { 
+                g_snake.MoveDown_flag = 1;           
+		   }
+		if(l_event.keyCode == 65)
+           {
+               g_snake_2.MoveLeft_flag_2=1;           
+		   }
+		if(l_event.keyCode == 68)
+           { 
+               g_snake_2.MoveRight_flag_2=1;            
+		   }
+		if(l_event.keyCode == 83)
+           { 
+               g_snake_2.MoveDown_flag_2=1;            
+		   }
+		if(l_event.keyCode == 87)
+           { 
+               g_snake_2.MoveUp_flag_2=1;            
+		   }
+		  
+			
+			
+		
+
+		
+    }
+	function onMouseDown(l_event)
+	{
+		//mose right click
+			
+            var mouseX = l_event.clientX - g_canvas.getBoundingClientRect().left;
+            var mouseY = l_event.clientY - g_canvas.getBoundingClientRect().top;
+			
+			if (mouseX >= home.instruction_x && mouseX <= (home.instruction_x+ home.instruction_width) &&
+                    mouseY >= home.instruction_y && mouseY <= (home.instruction_y+ home.instruction_height)) 
+				{
+					INFO_ACTIVE=1;
+					HOME_SCREEN_ACTIVE=1;
+				}
+			if (mouseX >= info.close_x && mouseX <= (info.close_x + info.close_width) &&
+                    mouseY >= info.close_y && mouseY <= (info.close_y+ info.close_height))
+				{
+					INFO_ACTIVE=0;
+					HOME_SCREEN_ACTIVE=0;
+				}
+			if (mouseX >= home.start_x && mouseX <= (home.start_x + home.start_width) &&
+                    mouseY >= home.start_y && mouseY <= (home.start_y+ home.start_height)) 
+				{
+					console.log("start");
+					
+					PLAYER_ACTIVE=1;
+					HOME_SCREEN_ACTIVE=1;
+				}
+		if (mouseX >= players.singlep_x && mouseX <= (players.singlep_x+ players.singlep_width) &&
+                    mouseY >= players.singlep_y && mouseY <= (players.singlep_y+ players.singlep_height)) 
+				{
+					console.log("start");
+					
+					PLAYER_ACTIVE=0;
+					SINGLE_PLAYER_FLAG=1;
+					Start_S=1;
+					
+					
+				}
+		if (mouseX >= players.multip_x && mouseX <= (players.multip_x+ players.multip_width) &&
+                    mouseY >= players.multip_y && mouseY <= (players.multip_y+ players.multip_height)) 
+				{
+				
+					
+					PLAYER_ACTIVE=0;
+					MULTI_PLAYER_FLAG=1;
+					Start_M=1;
+					
+					
+				}
+			if (mouseX >= gameover.home_x && mouseX <= (gameover.home_x + gameover.home_width) &&
+                    mouseY >= gameover.home_y && mouseY <= (gameover.home_y+ gameover.home_height))
+				{
+					HOME_SCREEN_ACTIVE=0;
+					GAME_OVER_ACTIVE=0;
+					SINGLE_PLAYER_FLAG=0;
+					MULTI_PLAYER_FLAG=0;
+					Start_S=0;
+			       g_snake.PLAYER1_GAMEENDING_FLAG=0;
+					g_snake_2.PLAYER2_GAMEENDING_FLAG=0;
+					Start_M=0;
+				    Start_H=1;
+						
+						
+					
+				}
+			if (mouseX >= gameover.restart_x && mouseX <= (gameover.restart_x + gameover.restart_width) &&
+                    mouseY >= gameover.restart_y && mouseY <= (gameover.restart_y+ gameover.restart_height))
+				{
+					
+					GAME_OVER_ACTIVE=0;
+					console.log(GAME_OVER_ACTIVE+"GAME_OVER_ACTIVE");
+					RESTART=1;
+				}
+	}
+    
+    function f_OnKeyUp(l_event)
+    {
+        
+        if(l_event.keyCode == 37)
+           {
+             g_snake.MoveLeft_flag = 0;           
+		   }
+        if(l_event.keyCode == 39)
+           {
+             g_snake.MoveRight_flag = 0;   
+                
+           }
+		if(l_event.keyCode == 38)
+           { 
+                  g_snake.MoveUp_flag = 0;          
+		   }
+        if(l_event.keyCode == 40)
+           {
+                   g_snake.MoveDown_flag = 0;           
+		   }
+		
+        if(l_event.keyCode == 65)
+           {
+               g_snake_2.MoveLeft_flag_2=0;           
+		   }
+		if(l_event.keyCode == 68)
+           { 
+               g_snake_2.MoveRight_flag_2=0;            
+		   }
+		if(l_event.keyCode == 83)
+           { 
+               g_snake_2.MoveDown_flag_2=0;            
+		   }
+		if(l_event.keyCode == 87)
+           { 
+               g_snake_2.MoveUp_flag_2=0;            
+		   }
+        
+
+    }
+    
+    window.addEventListener("keydown",f_OnKeyDown);
+    window.addEventListener("keyup",f_OnKeyUp);
+	window.addEventListener('mousedown', onMouseDown);
+	</script></html>
